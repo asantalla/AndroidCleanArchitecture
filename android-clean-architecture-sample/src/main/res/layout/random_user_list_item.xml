@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/selectableItemBackground"
+    android:paddingBottom="12dp"
+    android:paddingEnd="12dp"
+    android:paddingStart="12dp"
+    android:paddingTop="12dp">
+
+    <com.pkmmte.view.CircularImageView
+        android:id="@+id/random_user_list_item_image"
+        android:layout_width="88dp"
+        android:layout_height="77dp" />
+
+    <LinearLayout
+        android:id="@+id/random_user_list_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@id/random_user_list_item_image"
+        android:baselineAligned="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/random_user_list_item_fullname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="-2dp"
+            android:maxLines="3"
+            android:textSize="20sp"
+            tools:text="Mr Adrián Santalla" />
+
+        <TextView
+            android:id="@+id/random_user_list_item_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textSize="16sp"
+            tools:text="adrian.santalla@gmail.com" />
+
+        <TextView
+            android:id="@+id/random_user_list_item_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="12sp"
+            tools:text="91 666 78 90" />
+
+    </LinearLayout>
+
+</RelativeLayout>

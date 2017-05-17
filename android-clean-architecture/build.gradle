@@ -1,0 +1,59 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.neenbedankt.android-apt'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+
+    publishNonDefault true
+
+    defaultConfig {
+        minSdkVersion 17
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+def support_version = '25.3.1'
+def rxjava_version = '2.0.9'
+def rxandroid_version = '2.0.1'
+def rxbinding_version = '2.0.0'
+def butterknife_version = '8.5.1'
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    testCompile 'junit:junit:4.12'
+
+    // Android
+    compile "com.android.support:appcompat-v7:$support_version"
+    compile "com.android.support:support-v13:$support_version"
+    compile "com.android.support:design:$support_version"
+
+    // RxJava
+    compile "io.reactivex.rxjava2:rxjava:$rxjava_version"
+    compile "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
+
+    // RxBindings
+    compile "com.jakewharton.rxbinding2:rxbinding:$rxbinding_version"
+    compile "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:$rxbinding_version"
+    compile "com.jakewharton.rxbinding2:rxbinding-design:$rxbinding_version"
+    compile "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$rxbinding_version"
+
+    // Butter Knife
+    compile "com.jakewharton:butterknife:$butterknife_version"
+    apt "com.jakewharton:butterknife-compiler:$butterknife_version"
+}

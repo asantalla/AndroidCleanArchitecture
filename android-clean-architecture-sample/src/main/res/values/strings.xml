@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Random Users</string>
+
+    <string name="delete_item">Delete</string>
+    <string name="mark_as_favorite_item">Favorite</string>
+    <string name="load_more">Load more</string>
+</resources>
