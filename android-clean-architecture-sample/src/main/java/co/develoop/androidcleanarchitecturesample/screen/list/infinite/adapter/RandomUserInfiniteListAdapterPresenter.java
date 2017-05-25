@@ -40,7 +40,7 @@ public class RandomUserInfiniteListAdapterPresenter extends InfiniteAdapterPrese
 
             @Override
             public void subscribe(@NonNull CompletableEmitter e) throws Exception {
-                // Do some stuff
+                getView().showMessage().execute();
                 e.onComplete();
             }
         });

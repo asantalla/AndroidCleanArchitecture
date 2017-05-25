@@ -31,7 +31,7 @@ public class RandomUserSimpleListAdapterPresenter extends AdapterPresenter<Rando
 
             @Override
             public void subscribe(@NonNull CompletableEmitter e) throws Exception {
-                // Do some stuff
+                getView().showMessage().execute();
                 e.onComplete();
             }
         });

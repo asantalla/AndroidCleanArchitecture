@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
@@ -14,7 +15,8 @@ import com.squareup.picasso.Picasso;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import co.develoop.androidcleanarchitecture.screen.presenter.action.PresenterViewBinder;
+import co.develoop.androidcleanarchitecture.screen.presenter.actions.PresenterAction;
+import co.develoop.androidcleanarchitecture.screen.presenter.actions.PresenterBinder;
 import co.develoop.androidcleanarchitecture.screen.view.recycler.RecyclerViewHolder;
 import co.develoop.androidcleanarchitecturesample.R;
 import co.develoop.androidcleanarchitecturesample.RandomUsersApplication;
@@ -68,17 +70,23 @@ public class RandomUserSimpleListAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     @Override
-    public PresenterViewBinder<DiffUtil.DiffResult> getDiffResultBinder() {
-        return new PresenterViewBinder<DiffUtil.DiffResult>() {
+    public PresenterBinder<DiffUtil.DiffResult> getDiffResultBinder() {
+        return new PresenterBinder<DiffUtil.DiffResult>() {
 
             @Override
             public void setData(DiffUtil.DiffResult result) {
                 result.dispatchUpdatesTo(RandomUserSimpleListAdapter.this);
             }
+        };
+    }
+
+    @Override
+    public PresenterAction showMessage() {
+        return new PresenterAction() {
 
             @Override
-            public void clearData() {
-                notifyDataSetChanged();
+            public void execute() {
+                Toast.makeText(mContext, "Item clicked!!", Toast.LENGTH_LONG).show();
             }
         };
     }

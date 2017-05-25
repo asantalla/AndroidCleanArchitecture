@@ -1,4 +1,4 @@
-package co.develoop.androidcleanarchitecture.screen.presenter.action;
+package co.develoop.androidcleanarchitecture.screen.presenter.actions;
 
 import android.view.View;
 
@@ -6,11 +6,11 @@ import com.jakewharton.rxbinding2.view.RxView;
 
 import io.reactivex.Observable;
 
-public class PresenterViewClicker<T extends View> {
+public class PresenterClicker<T extends View> {
 
     private T mClickableView;
 
-    public PresenterViewClicker(T clickableView) {
+    public PresenterClicker(T clickableView) {
         mClickableView = clickableView;
     }
 

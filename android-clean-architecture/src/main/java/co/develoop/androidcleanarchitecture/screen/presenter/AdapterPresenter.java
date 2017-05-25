@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import co.develoop.androidcleanarchitecture.client.transaction.Transaction;
-import co.develoop.androidcleanarchitecture.screen.presenter.action.PresenterViewBinder;
+import co.develoop.androidcleanarchitecture.screen.presenter.actions.PresenterBinder;
 import co.develoop.androidcleanarchitecture.screen.view.recycler.RecyclerViewDiffUtilCallback;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
@@ -96,7 +96,7 @@ public abstract class AdapterPresenter<V extends AdapterPresenterView, T> extend
         };
     }
 
-    private PresenterViewBinder<DiffUtil.DiffResult> getDiffResultBinder() {
+    private PresenterBinder<DiffUtil.DiffResult> getDiffResultBinder() {
         return getView().getDiffResultBinder();
     }
 }

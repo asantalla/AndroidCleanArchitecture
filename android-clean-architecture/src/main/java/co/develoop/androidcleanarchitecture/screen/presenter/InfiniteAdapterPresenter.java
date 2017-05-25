@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import co.develoop.androidcleanarchitecture.client.transaction.Transaction;
-import co.develoop.androidcleanarchitecture.screen.presenter.action.PresenterViewBinder;
+import co.develoop.androidcleanarchitecture.screen.presenter.actions.PresenterBinder;
 import co.develoop.androidcleanarchitecture.screen.view.recycler.EndlessRecyclerViewScrollObservable;
 import co.develoop.androidcleanarchitecture.screen.view.recycler.RecyclerViewDiffUtilCallback;
 import io.reactivex.Completable;
@@ -243,7 +243,7 @@ public abstract class InfiniteAdapterPresenter<V extends InfiniteAdapterPresente
         return getView().showFooterView();
     }
 
-    private PresenterViewBinder<DiffUtil.DiffResult> getDiffResultBinder() {
+    private PresenterBinder<DiffUtil.DiffResult> getDiffResultBinder() {
         return getView().getDiffResultBinder();
     }
 }

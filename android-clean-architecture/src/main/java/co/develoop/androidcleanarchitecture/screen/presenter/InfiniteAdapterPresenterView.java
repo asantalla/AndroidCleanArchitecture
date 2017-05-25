@@ -4,7 +4,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 
-import co.develoop.androidcleanarchitecture.screen.presenter.action.PresenterViewBinder;
+import co.develoop.androidcleanarchitecture.screen.presenter.actions.PresenterBinder;
 
 public interface InfiniteAdapterPresenterView extends PresenterView {
 
@@ -16,5 +16,5 @@ public interface InfiniteAdapterPresenterView extends PresenterView {
 
     Boolean showFooterView();
 
-    PresenterViewBinder<DiffUtil.DiffResult> getDiffResultBinder();
+    PresenterBinder<DiffUtil.DiffResult> getDiffResultBinder();
 }
