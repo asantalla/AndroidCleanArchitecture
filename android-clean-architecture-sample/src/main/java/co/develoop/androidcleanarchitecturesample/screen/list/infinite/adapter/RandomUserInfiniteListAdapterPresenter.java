@@ -3,8 +3,8 @@ package co.develoop.androidcleanarchitecturesample.screen.list.infinite.adapter;
 import java.util.List;
 
 import co.develoop.androidcleanarchitecture.client.transaction.Transaction;
-import co.develoop.androidcleanarchitecture.screen.presenter.AdapterItem;
-import co.develoop.androidcleanarchitecture.screen.presenter.InfiniteAdapterPresenter;
+import co.develoop.androidcleanarchitecture.screen.presenter.recyclerview.AdapterItem;
+import co.develoop.androidcleanarchitecture.screen.presenter.recyclerview.InfiniteAdapterPresenter;
 import co.develoop.androidcleanarchitecturesample.domain.model.user.RandomUser;
 import co.develoop.androidcleanarchitecturesample.usecase.user.LoadRandomUserListUseCase;
 import co.develoop.androidcleanarchitecturesample.usecase.user.SetLoadRandomUserListPaginationUseCase;
@@ -35,12 +35,12 @@ public class RandomUserInfiniteListAdapterPresenter extends InfiniteAdapterPrese
     }
 
     @Override
-    public Completable getItemClickCompletable() {
+    public Completable getItemClickCompletable(final RandomUser randomUser) {
         return Completable.create(new CompletableOnSubscribe() {
 
             @Override
             public void subscribe(@NonNull CompletableEmitter e) throws Exception {
-                getView().showMessage().execute();
+                getView().showName(randomUser.getName().toString()).execute();
                 e.onComplete();
             }
         });

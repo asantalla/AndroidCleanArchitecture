@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 
 import java.util.Objects;
 
-import co.develoop.androidcleanarchitecture.screen.presenter.AdapterItem;
+import co.develoop.androidcleanarchitecture.screen.presenter.recyclerview.AdapterItem;
 
 public class RandomUser implements Comparable<RandomUser>, AdapterItem {
 

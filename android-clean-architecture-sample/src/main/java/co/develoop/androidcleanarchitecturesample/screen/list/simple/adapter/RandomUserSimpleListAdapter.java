@@ -81,12 +81,12 @@ public class RandomUserSimpleListAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     @Override
-    public PresenterAction showMessage() {
+    public PresenterAction showName(final String name) {
         return new PresenterAction() {
 
             @Override
             public void execute() {
-                Toast.makeText(mContext, "Item clicked!!", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "Name: " + name, Toast.LENGTH_LONG).show();
             }
         };
     }
@@ -105,14 +105,14 @@ public class RandomUserSimpleListAdapter extends RecyclerView.Adapter<RecyclerVi
         @BindView(R.id.random_user_list_item_image)
         CircularImageView imageCircularImageView;
 
-        public RandomUserListItemViewHolder(final View itemView) {
+        public RandomUserListItemViewHolder(View itemView) {
             super(itemView);
-
-            mRandomUserSimpleListAdapterPresenter.bindItemClick(itemView);
         }
 
         @Override
         public void configure(Context context, final RandomUser randomUser) {
+            mRandomUserSimpleListAdapterPresenter.bindItemClick(itemView, randomUser);
+
             RandomUserPicture randomUserPicture = randomUser.getPicture();
 
             if (randomUserPicture != null && randomUserPicture.getMedium() != null) {

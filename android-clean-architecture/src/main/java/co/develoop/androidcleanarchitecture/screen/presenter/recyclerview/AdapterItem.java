@@ -1,4 +1,4 @@
-package co.develoop.androidcleanarchitecture.screen.presenter;
+package co.develoop.androidcleanarchitecture.screen.presenter.recyclerview;
 
 public interface AdapterItem {
 

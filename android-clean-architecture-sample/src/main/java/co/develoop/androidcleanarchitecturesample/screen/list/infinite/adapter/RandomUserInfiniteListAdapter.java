@@ -17,9 +17,9 @@ import com.squareup.picasso.Picasso;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import co.develoop.androidcleanarchitecture.screen.presenter.AdapterItem;
 import co.develoop.androidcleanarchitecture.screen.presenter.actions.PresenterAction;
 import co.develoop.androidcleanarchitecture.screen.presenter.actions.PresenterBinder;
+import co.develoop.androidcleanarchitecture.screen.presenter.recyclerview.AdapterItem;
 import co.develoop.androidcleanarchitecture.screen.view.recycler.RecyclerViewHolder;
 import co.develoop.androidcleanarchitecturesample.R;
 import co.develoop.androidcleanarchitecturesample.RandomUsersApplication;
@@ -131,12 +131,12 @@ public class RandomUserInfiniteListAdapter extends RecyclerView.Adapter<Recycler
     }
 
     @Override
-    public PresenterAction showMessage() {
+    public PresenterAction showName(final String name) {
         return new PresenterAction() {
 
             @Override
             public void execute() {
-                Toast.makeText(mContext, "Item clicked!!", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "Name: " + name, Toast.LENGTH_LONG).show();
             }
         };
     }
@@ -155,14 +155,14 @@ public class RandomUserInfiniteListAdapter extends RecyclerView.Adapter<Recycler
         @BindView(R.id.random_user_list_item_image)
         CircularImageView imageCircularImageView;
 
-        public RandomUserListItemViewHolder(final View itemView) {
+        public RandomUserListItemViewHolder(View itemView) {
             super(itemView);
-
-            mRandomUserListAdapterPresenter.bindItemClick(itemView);
         }
 
         @Override
         public void configure(Context context, final RandomUser randomUser) {
+            mRandomUserListAdapterPresenter.bindItemClick(itemView, randomUser);
+
             RandomUserPicture randomUserPicture = randomUser.getPicture();
 
             if (randomUserPicture != null && randomUserPicture.getMedium() != null) {

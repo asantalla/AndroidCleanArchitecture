@@ -1,4 +1,4 @@
-package co.develoop.androidcleanarchitecture.screen.presenter;
+package co.develoop.androidcleanarchitecture.screen.presenter.recyclerview;
 
 import android.support.design.widget.Snackbar;
 import android.support.v7.util.DiffUtil;
@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import co.develoop.androidcleanarchitecture.client.transaction.Transaction;
+import co.develoop.androidcleanarchitecture.screen.presenter.Presenter;
 import co.develoop.androidcleanarchitecture.screen.presenter.actions.PresenterBinder;
 import co.develoop.androidcleanarchitecture.screen.view.recycler.EndlessRecyclerViewScrollObservable;
 import co.develoop.androidcleanarchitecture.screen.view.recycler.RecyclerViewDiffUtilCallback;
@@ -27,7 +28,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-public abstract class InfiniteAdapterPresenter<V extends InfiniteAdapterPresenterView, T extends AdapterItem> extends Presenter<V> {
+public abstract class InfiniteAdapterPresenter<V extends InfiniteAdapterPresenterView, T extends AdapterItem> extends Presenter<V> implements PresenterList<T> {
 
     private List<T> mList;
 
@@ -51,23 +52,19 @@ public abstract class InfiniteAdapterPresenter<V extends InfiniteAdapterPresente
         return mList;
     }
 
-    public abstract Observable<Transaction<List<T>>> getLoadObservable();
-
     public abstract Observable<Object> getPaginationObservable(int page);
-
-    public abstract Completable getItemClickCompletable();
 
     public abstract T getLoadingObject();
 
     public abstract T getFooterObject();
 
-    public void bindItemClick(final View view) {
+    public void bindItemClick(final View view, final T data) {
         addSubscription(RxView.clicks(view)
                 .flatMapCompletable(new Function<Object, Completable>() {
 
                     @Override
                     public Completable apply(@NonNull Object o) throws Exception {
-                        return getItemClickCompletable();
+                        return getItemClickCompletable(data);
                     }
                 })
                 .subscribe());

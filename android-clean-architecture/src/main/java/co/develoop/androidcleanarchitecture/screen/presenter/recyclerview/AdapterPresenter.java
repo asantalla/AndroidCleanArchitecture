@@ -1,4 +1,4 @@
-package co.develoop.androidcleanarchitecture.screen.presenter;
+package co.develoop.androidcleanarchitecture.screen.presenter.recyclerview;
 
 import android.support.v7.util.DiffUtil;
 import android.view.View;
@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import co.develoop.androidcleanarchitecture.client.transaction.Transaction;
+import co.develoop.androidcleanarchitecture.screen.presenter.Presenter;
 import co.develoop.androidcleanarchitecture.screen.presenter.actions.PresenterBinder;
 import co.develoop.androidcleanarchitecture.screen.view.recycler.RecyclerViewDiffUtilCallback;
 import io.reactivex.Completable;
@@ -22,7 +23,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-public abstract class AdapterPresenter<V extends AdapterPresenterView, T> extends Presenter<V> {
+public abstract class AdapterPresenter<V extends AdapterPresenterView, T> extends Presenter<V> implements PresenterList<T> {
 
     private List<T> mList;
 
@@ -37,17 +38,13 @@ public abstract class AdapterPresenter<V extends AdapterPresenterView, T> extend
         return mList;
     }
 
-    public abstract Observable<Transaction<List<T>>> getLoadObservable();
-
-    public abstract Completable getItemClickCompletable();
-
-    public void bindItemClick(final View view) {
+    public void bindItemClick(final View view, final T data) {
         addSubscription(RxView.clicks(view)
                 .flatMapCompletable(new Function<Object, Completable>() {
 
                     @Override
                     public Completable apply(@NonNull Object o) throws Exception {
-                        return getItemClickCompletable();
+                        return getItemClickCompletable(data);
                     }
                 })
                 .subscribe());
