@@ -17,6 +17,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import co.develoop.androidcleanarchitecture.screen.presenter.actions.PresenterAction;
 import co.develoop.androidcleanarchitecture.screen.presenter.actions.PresenterBinder;
+import co.develoop.androidcleanarchitecture.screen.presenter.recyclerview.AdapterItem;
 import co.develoop.androidcleanarchitecture.screen.view.recycler.RecyclerViewHolder;
 import co.develoop.androidcleanarchitecturesample.R;
 import co.develoop.androidcleanarchitecturesample.RandomUsersApplication;
@@ -41,8 +42,15 @@ public class RandomUserSimpleListAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_item, null);
-        return new RandomUserListItemViewHolder(view);
+        if (viewType == AdapterItem.Type.ITEM.ordinal()) {
+            return new RandomUserListItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_item, parent, false));
+        } else if (viewType == AdapterItem.Type.FAKE.ordinal()) {
+            return new RandomUserListFakeItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_fake_item, parent, false));
+        } else if (viewType == AdapterItem.Type.LOADING.ordinal()) {
+            return new RandomUserListLoadingItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_loading_item, parent, false));
+        } else {
+            return new RandomUserListErrorItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_error_item, parent, false));
+        }
     }
 
     @Override
@@ -53,6 +61,11 @@ public class RandomUserSimpleListAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public int getItemCount() {
         return mRandomUserSimpleListAdapterPresenter.getListData().size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return mRandomUserSimpleListAdapterPresenter.getListData().get(position).getType().ordinal();
     }
 
     @Override
@@ -91,7 +104,7 @@ public class RandomUserSimpleListAdapter extends RecyclerView.Adapter<RecyclerVi
         };
     }
 
-    class RandomUserListItemViewHolder extends RecyclerViewHolder<RandomUser> {
+    public class RandomUserListItemViewHolder extends RecyclerViewHolder<RandomUser> {
 
         @BindView(R.id.random_user_list_item_fullname)
         TextView fullnameTextView;
@@ -105,7 +118,7 @@ public class RandomUserSimpleListAdapter extends RecyclerView.Adapter<RecyclerVi
         @BindView(R.id.random_user_list_item_image)
         CircularImageView imageCircularImageView;
 
-        public RandomUserListItemViewHolder(View itemView) {
+        RandomUserListItemViewHolder(View itemView) {
             super(itemView);
         }
 
@@ -125,6 +138,39 @@ public class RandomUserSimpleListAdapter extends RecyclerView.Adapter<RecyclerVi
             fullnameTextView.setText(randomUser.getName().toString());
             emailTextView.setText(randomUser.getEmail());
             phoneTextView.setText(randomUser.getPhone());
+        }
+    }
+
+    private class RandomUserListFakeItemViewHolder extends RecyclerViewHolder<RandomUser> {
+
+        RandomUserListFakeItemViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        public void configure(Context context, RandomUser item) {
+        }
+    }
+
+    private class RandomUserListErrorItemViewHolder extends RecyclerViewHolder<RandomUser> {
+
+        RandomUserListErrorItemViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        public void configure(Context context, RandomUser item) {
+        }
+    }
+
+    private class RandomUserListLoadingItemViewHolder extends RecyclerViewHolder<RandomUser> {
+
+        RandomUserListLoadingItemViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        public void configure(Context context, RandomUser item) {
         }
     }
 }

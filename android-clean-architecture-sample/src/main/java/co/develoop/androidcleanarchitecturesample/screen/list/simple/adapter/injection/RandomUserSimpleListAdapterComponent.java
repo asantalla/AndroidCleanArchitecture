@@ -8,5 +8,5 @@ import dagger.Component;
 @Component(dependencies = {AppComponent.class}, modules = {RandomUserSimpleListAdapterModule.class})
 public interface RandomUserSimpleListAdapterComponent {
 
-    void inject(RandomUserSimpleListAdapter randomUserListAdapter);
+    void inject(RandomUserSimpleListAdapter randomUserSimpleListAdapter);
 }

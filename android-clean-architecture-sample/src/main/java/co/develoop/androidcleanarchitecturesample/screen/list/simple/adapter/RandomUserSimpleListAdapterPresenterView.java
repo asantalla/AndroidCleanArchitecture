@@ -1,9 +1,9 @@
 package co.develoop.androidcleanarchitecturesample.screen.list.simple.adapter;
 
 import co.develoop.androidcleanarchitecture.screen.presenter.actions.PresenterAction;
-import co.develoop.androidcleanarchitecture.screen.presenter.recyclerview.AdapterPresenterView;
+import co.develoop.androidcleanarchitecture.screen.presenter.recyclerview.SimpleAdapterPresenterView;
 
-public interface RandomUserSimpleListAdapterPresenterView extends AdapterPresenterView {
+interface RandomUserSimpleListAdapterPresenterView extends SimpleAdapterPresenterView {
 
     PresenterAction showName(String name);
 }

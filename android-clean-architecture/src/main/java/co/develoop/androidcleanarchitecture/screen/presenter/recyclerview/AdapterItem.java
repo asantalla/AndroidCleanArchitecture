@@ -7,6 +7,6 @@ public interface AdapterItem {
     Type getType();
 
     enum Type {
-        ITEM, LOADING, FOOTER
+        ITEM, LOADING, FOOTER, FAKE, ERROR
     }
 }

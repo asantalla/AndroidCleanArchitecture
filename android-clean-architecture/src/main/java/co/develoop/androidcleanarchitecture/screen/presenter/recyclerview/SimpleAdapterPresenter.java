@@ -23,7 +23,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-public abstract class AdapterPresenter<V extends AdapterPresenterView, T> extends Presenter<V> implements PresenterList<T> {
+public abstract class SimpleAdapterPresenter<V extends SimpleAdapterPresenterView, T extends AdapterItem> extends Presenter<V> implements PresenterList<T> {
 
     private List<T> mList;
 
@@ -31,8 +31,17 @@ public abstract class AdapterPresenter<V extends AdapterPresenterView, T> extend
     protected void init() {
         mList = new LinkedList<>();
 
+        List<T> loadingList = getLoadingList();
+        if (loadingList != null && !loadingList.isEmpty()) {
+            mList.addAll(loadingList);
+        }
+
         loadInitialData();
     }
+
+    public abstract List<T> getLoadingList();
+
+    public abstract List<T> getNetworkErrorList();
 
     public List<T> getListData() {
         return mList;
@@ -51,9 +60,37 @@ public abstract class AdapterPresenter<V extends AdapterPresenterView, T> extend
     }
 
     private void loadInitialData() {
-        addSubscription(getLoadObservable()
+        addSubscription(loadData()
                 .flatMap(calculateRecyclerViewDiffs())
                 .subscribe(showResults()));
+    }
+
+    private Observable<Transaction<List<T>>> loadData() {
+        return getLoadObservable().map(addAdapterItemTypeToElements());
+    }
+
+    private Function<Transaction<List<T>>, Transaction<List<T>>> addAdapterItemTypeToElements() {
+        return new Function<Transaction<List<T>>, Transaction<List<T>>>() {
+
+            @Override
+            public Transaction<List<T>> apply(@NonNull Transaction<List<T>> transaction) throws Exception {
+                Transaction<List<T>> newTransaction = transaction;
+
+                if (transaction.isSuccess()) {
+                    List<T> list = new ArrayList<>();
+
+                    for (T element : transaction.getData()) {
+                        element.setType(AdapterItem.Type.ITEM);
+                        list.add(element);
+                    }
+
+                    transaction.setData(list);
+                    newTransaction = transaction;
+                }
+
+                return newTransaction;
+            }
+        };
     }
 
     private Function<Transaction<List<T>>, Observable<DiffUtil.DiffResult>> calculateRecyclerViewDiffs() {
@@ -65,7 +102,7 @@ public abstract class AdapterPresenter<V extends AdapterPresenterView, T> extend
 
                     @Override
                     public void subscribe(@NonNull ObservableEmitter<DiffUtil.DiffResult> observer) throws Exception {
-                        observer.onNext(calculateRecyclerViewDiffDiffResult(transaction.isSuccess() ? transaction.getData() : new ArrayList<T>()));
+                        observer.onNext(calculateRecyclerViewDiffDiffResult(transaction.isSuccess() ? transaction.getData() : getNetworkErrorList()));
                         observer.onComplete();
                     }
                 }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
@@ -74,11 +111,8 @@ public abstract class AdapterPresenter<V extends AdapterPresenterView, T> extend
     }
 
     private DiffUtil.DiffResult calculateRecyclerViewDiffDiffResult(List<T> newData) {
-        List<T> oldList = new LinkedList<>(mList);
-
-        if (newData != null && newData.size() > 0) {
-            mList.addAll(newData);
-        }
+        List<T> oldList = new ArrayList<>(mList);
+        mList = new ArrayList<>(newData);
 
         return DiffUtil.calculateDiff(new RecyclerViewDiffUtilCallback<>(oldList, mList));
     }
