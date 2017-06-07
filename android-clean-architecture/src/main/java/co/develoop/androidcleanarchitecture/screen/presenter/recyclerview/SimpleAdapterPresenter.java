@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import co.develoop.androidcleanarchitecture.client.transaction.Transaction;
+import co.develoop.androidcleanarchitecture.client.transaction.TransactionStatus;
 import co.develoop.androidcleanarchitecture.screen.presenter.Presenter;
 import co.develoop.androidcleanarchitecture.screen.presenter.actions.PresenterBinder;
 import co.develoop.androidcleanarchitecture.screen.view.recycler.RecyclerViewDiffUtilCallback;
@@ -29,14 +30,16 @@ public abstract class SimpleAdapterPresenter<V extends SimpleAdapterPresenterVie
 
     @Override
     protected void init() {
-        mList = new LinkedList<>();
+        if (mList == null) {
+            mList = new LinkedList<>();
 
-        List<T> loadingList = getLoadingList();
-        if (loadingList != null && !loadingList.isEmpty()) {
-            mList.addAll(loadingList);
+            List<T> loadingList = getLoadingList();
+            if (loadingList != null && !loadingList.isEmpty()) {
+                mList.addAll(loadingList);
+            }
         }
 
-        loadInitialData();
+        loadData();
     }
 
     public abstract List<T> getLoadingList();
@@ -59,14 +62,48 @@ public abstract class SimpleAdapterPresenter<V extends SimpleAdapterPresenterVie
                 .subscribe());
     }
 
-    private void loadInitialData() {
-        addSubscription(loadData()
-                .flatMap(calculateRecyclerViewDiffs())
+    public void bindReloadDataObservable(Observable<Object> reloadObservable) {
+        addSubscription(reloadObservable
+                .flatMap(new Function<Object, Observable<DiffUtil.DiffResult>>() {
+
+                    @Override
+                    public Observable<DiffUtil.DiffResult> apply(@NonNull Object o) throws Exception {
+                        return load();
+                    }
+                })
                 .subscribe(showResults()));
     }
 
-    private Observable<Transaction<List<T>>> loadData() {
-        return getLoadObservable().map(addAdapterItemTypeToElements());
+    private void loadData() {
+        addSubscription(load().subscribe(showResults()));
+    }
+
+    private Observable<DiffUtil.DiffResult> load() {
+        return loadLoadingData()
+                .flatMap(calculateRecyclerViewDiffs())
+                .doOnNext(showResults())
+                .flatMap(loadObservableData())
+                .flatMap(calculateRecyclerViewDiffs());
+    }
+
+    private Observable<Transaction<List<T>>> loadLoadingData() {
+        return Observable.create(new ObservableOnSubscribe<Transaction<List<T>>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Transaction<List<T>>> observer) throws Exception {
+                observer.onNext(new Transaction<>(getLoadingList(), TransactionStatus.SUCCESS));
+                observer.onComplete();
+            }
+        });
+    }
+
+    private Function<DiffUtil.DiffResult, Observable<Transaction<List<T>>>> loadObservableData() {
+        return new Function<DiffUtil.DiffResult, Observable<Transaction<List<T>>>>() {
+
+            @Override
+            public Observable<Transaction<List<T>>> apply(@NonNull DiffUtil.DiffResult diffResult) throws Exception {
+                return getLoadObservable().map(addAdapterItemTypeToElements());
+            }
+        };
     }
 
     private Function<Transaction<List<T>>, Transaction<List<T>>> addAdapterItemTypeToElements() {

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jakewharton.rxbinding2.view.RxView;
 import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
 
@@ -160,6 +161,7 @@ public class RandomUserSimpleListAdapter extends RecyclerView.Adapter<RecyclerVi
 
         @Override
         public void configure(Context context, RandomUser item) {
+            mRandomUserSimpleListAdapterPresenter.bindReloadDataObservable(RxView.clicks(itemView.findViewById(R.id.retry_button)));
         }
     }
 
