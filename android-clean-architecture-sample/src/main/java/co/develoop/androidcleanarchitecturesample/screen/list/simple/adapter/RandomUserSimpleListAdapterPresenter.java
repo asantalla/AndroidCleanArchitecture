@@ -1,5 +1,7 @@
 package co.develoop.androidcleanarchitecturesample.screen.list.simple.adapter;
 
+import android.view.View;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +30,7 @@ public class RandomUserSimpleListAdapterPresenter extends SimpleAdapterPresenter
     }
 
     @Override
-    public Completable getItemClickCompletable(final RandomUser randomUser) {
+    public Completable getItemClickCompletable(final View viewClicked, final RandomUser randomUser) {
         return Completable.create(new CompletableOnSubscribe() {
 
             @Override

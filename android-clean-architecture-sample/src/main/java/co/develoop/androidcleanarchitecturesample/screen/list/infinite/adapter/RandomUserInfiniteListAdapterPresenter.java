@@ -1,5 +1,7 @@
 package co.develoop.androidcleanarchitecturesample.screen.list.infinite.adapter;
 
+import android.view.View;
+
 import java.util.List;
 
 import co.develoop.androidcleanarchitecture.client.transaction.Transaction;
@@ -35,7 +37,7 @@ public class RandomUserInfiniteListAdapterPresenter extends InfiniteAdapterPrese
     }
 
     @Override
-    public Completable getItemClickCompletable(final RandomUser randomUser) {
+    public Completable getItemClickCompletable(final View viewClicked, final RandomUser randomUser) {
         return Completable.create(new CompletableOnSubscribe() {
 
             @Override

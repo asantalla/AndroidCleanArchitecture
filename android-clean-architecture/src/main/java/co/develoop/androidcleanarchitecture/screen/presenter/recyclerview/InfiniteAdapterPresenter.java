@@ -64,7 +64,7 @@ public abstract class InfiniteAdapterPresenter<V extends InfiniteAdapterPresente
 
                     @Override
                     public Completable apply(@NonNull Object o) throws Exception {
-                        return getItemClickCompletable(data);
+                        return getItemClickCompletable(view, data);
                     }
                 })
                 .subscribe());

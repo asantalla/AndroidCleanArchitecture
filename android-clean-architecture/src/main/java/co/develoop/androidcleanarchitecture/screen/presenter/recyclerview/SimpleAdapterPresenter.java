@@ -56,7 +56,7 @@ public abstract class SimpleAdapterPresenter<V extends SimpleAdapterPresenterVie
 
                     @Override
                     public Completable apply(@NonNull Object o) throws Exception {
-                        return getItemClickCompletable(data);
+                        return getItemClickCompletable(view, data);
                     }
                 })
                 .subscribe());
