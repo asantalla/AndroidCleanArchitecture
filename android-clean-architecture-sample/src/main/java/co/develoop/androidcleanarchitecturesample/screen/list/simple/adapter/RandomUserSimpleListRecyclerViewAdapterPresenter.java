@@ -7,7 +7,7 @@ import java.util.List;
 
 import co.develoop.androidcleanarchitecture.client.transaction.Transaction;
 import co.develoop.androidcleanarchitecture.screen.presenter.recyclerview.AdapterItem;
-import co.develoop.androidcleanarchitecture.screen.presenter.recyclerview.SimpleAdapterPresenter;
+import co.develoop.androidcleanarchitecture.screen.presenter.recyclerview.SimpleRecyclerViewAdapterPresenter;
 import co.develoop.androidcleanarchitecturesample.domain.model.user.RandomUser;
 import co.develoop.androidcleanarchitecturesample.usecase.user.LoadRandomUserListUseCase;
 import io.reactivex.Completable;
@@ -16,11 +16,11 @@ import io.reactivex.CompletableOnSubscribe;
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 
-public class RandomUserSimpleListAdapterPresenter extends SimpleAdapterPresenter<RandomUserSimpleListAdapterPresenterView, RandomUser> {
+public class RandomUserSimpleListRecyclerViewAdapterPresenter extends SimpleRecyclerViewAdapterPresenter<RandomUserSimpleListRecyclerViewAdapterPresenterView, RandomUser> {
 
     private LoadRandomUserListUseCase mLoadRandomUserListUseCase;
 
-    public RandomUserSimpleListAdapterPresenter(LoadRandomUserListUseCase loadRandomUserListUseCase) {
+    public RandomUserSimpleListRecyclerViewAdapterPresenter(LoadRandomUserListUseCase loadRandomUserListUseCase) {
         mLoadRandomUserListUseCase = loadRandomUserListUseCase;
     }
 

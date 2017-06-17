@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import butterknife.BindView;
 import co.develoop.androidcleanarchitecturesample.BaseFragment;
 import co.develoop.androidcleanarchitecturesample.R;
-import co.develoop.androidcleanarchitecturesample.screen.list.simple.adapter.RandomUserSimpleListAdapter;
+import co.develoop.androidcleanarchitecturesample.screen.list.simple.adapter.RandomUserSimpleListRecyclerViewAdapter;
 
 public class RandomUserSimpleListFragment extends BaseFragment {
 
@@ -40,6 +40,6 @@ public class RandomUserSimpleListFragment extends BaseFragment {
 
         mRandomUserRecyclerView.setLayoutManager(layoutManager);
         mRandomUserRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRandomUserRecyclerView.setAdapter(new RandomUserSimpleListAdapter());
+        mRandomUserRecyclerView.setAdapter(new RandomUserSimpleListRecyclerViewAdapter());
     }
 }

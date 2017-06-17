@@ -26,15 +26,15 @@ import co.develoop.androidcleanarchitecturesample.domain.model.user.RandomUser;
 import co.develoop.androidcleanarchitecturesample.domain.model.user.RandomUserPicture;
 import co.develoop.androidcleanarchitecturesample.screen.list.simple.adapter.injection.DaggerRandomUserSimpleListAdapterComponent;
 
-public class RandomUserSimpleListAdapter extends RecyclerView.Adapter<RecyclerViewHolder> implements RandomUserSimpleListAdapterPresenterView {
+public class RandomUserSimpleListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder> implements RandomUserSimpleListRecyclerViewAdapterPresenterView {
 
     @Inject
     public Context mContext;
 
     @Inject
-    public RandomUserSimpleListAdapterPresenter mRandomUserSimpleListAdapterPresenter;
+    public RandomUserSimpleListRecyclerViewAdapterPresenter mRandomUserSimpleListAdapterPresenter;
 
-    public RandomUserSimpleListAdapter() {
+    public RandomUserSimpleListRecyclerViewAdapter() {
         DaggerRandomUserSimpleListAdapterComponent.builder()
                 .appComponent(RandomUsersApplication.daggerAppComponent())
                 .build()
@@ -89,7 +89,7 @@ public class RandomUserSimpleListAdapter extends RecyclerView.Adapter<RecyclerVi
 
             @Override
             public void setData(DiffUtil.DiffResult result) {
-                result.dispatchUpdatesTo(RandomUserSimpleListAdapter.this);
+                result.dispatchUpdatesTo(RandomUserSimpleListRecyclerViewAdapter.this);
             }
         };
     }

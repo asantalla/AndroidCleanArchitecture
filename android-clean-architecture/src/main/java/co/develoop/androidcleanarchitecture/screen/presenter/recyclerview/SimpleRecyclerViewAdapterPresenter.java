@@ -24,19 +24,27 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-public abstract class SimpleAdapterPresenter<V extends SimpleAdapterPresenterView, T extends AdapterItem> extends Presenter<V> implements PresenterList<T> {
+public abstract class SimpleRecyclerViewAdapterPresenter<V extends SimpleRecyclerViewAdapterPresenterView, T extends AdapterItem> extends Presenter<V> implements PresenterList<T> {
 
     private List<T> mList;
+    private List<T> mLoadingList;
+    private List<T> mNetworkErrorList;
 
     @Override
     protected void init() {
         if (mList == null) {
             mList = new LinkedList<>();
+        }
 
-            List<T> loadingList = getLoadingList();
-            if (loadingList != null && !loadingList.isEmpty()) {
-                mList.addAll(loadingList);
-            }
+        mLoadingList = getLoadingList();
+        if (mLoadingList == null) {
+            mLoadingList = new ArrayList<>();
+        }
+        mList.addAll(mLoadingList);
+
+        mNetworkErrorList = getNetworkErrorList();
+        if (mNetworkErrorList == null) {
+            mNetworkErrorList = new ArrayList<>();
         }
 
         loadData();
@@ -90,7 +98,7 @@ public abstract class SimpleAdapterPresenter<V extends SimpleAdapterPresenterVie
         return Observable.create(new ObservableOnSubscribe<Transaction<List<T>>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Transaction<List<T>>> observer) throws Exception {
-                observer.onNext(new Transaction<>(getLoadingList(), TransactionStatus.SUCCESS));
+                observer.onNext(new Transaction<>(mLoadingList, TransactionStatus.SUCCESS));
                 observer.onComplete();
             }
         });
@@ -139,7 +147,7 @@ public abstract class SimpleAdapterPresenter<V extends SimpleAdapterPresenterVie
 
                     @Override
                     public void subscribe(@NonNull ObservableEmitter<DiffUtil.DiffResult> observer) throws Exception {
-                        observer.onNext(calculateRecyclerViewDiffDiffResult(transaction.isSuccess() ? transaction.getData() : getNetworkErrorList()));
+                        observer.onNext(calculateRecyclerViewDiffDiffResult(transaction.isSuccess() ? transaction.getData() : mNetworkErrorList));
                         observer.onComplete();
                     }
                 }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
