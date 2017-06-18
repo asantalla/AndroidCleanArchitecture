@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import butterknife.BindView;
 import co.develoop.androidcleanarchitecturesample.BaseFragment;
 import co.develoop.androidcleanarchitecturesample.R;
-import co.develoop.androidcleanarchitecturesample.screen.list.infinite.adapter.RandomUserInfiniteListAdapter;
+import co.develoop.androidcleanarchitecturesample.screen.list.infinite.adapter.RandomUserInfiniteListRecyclerViewAdapter;
 
 public class RandomUserInfiniteListFragment extends BaseFragment {
 
@@ -40,6 +40,6 @@ public class RandomUserInfiniteListFragment extends BaseFragment {
 
         mRandomUserRecyclerView.setLayoutManager(layoutManager);
         mRandomUserRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRandomUserRecyclerView.setAdapter(new RandomUserInfiniteListAdapter());
+        mRandomUserRecyclerView.setAdapter(new RandomUserInfiniteListRecyclerViewAdapter());
     }
 }

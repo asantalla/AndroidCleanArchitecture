@@ -18,7 +18,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import co.develoop.androidcleanarchitecture.screen.presenter.actions.PresenterAction;
 import co.develoop.androidcleanarchitecture.screen.presenter.actions.PresenterBinder;
-import co.develoop.androidcleanarchitecture.screen.presenter.recyclerview.AdapterItem;
+import co.develoop.androidcleanarchitecture.screen.presenter.recyclerview.RecyclerViewAdapterItem;
 import co.develoop.androidcleanarchitecture.screen.view.recycler.RecyclerViewHolder;
 import co.develoop.androidcleanarchitecturesample.R;
 import co.develoop.androidcleanarchitecturesample.RandomUsersApplication;
@@ -26,7 +26,7 @@ import co.develoop.androidcleanarchitecturesample.domain.model.user.RandomUser;
 import co.develoop.androidcleanarchitecturesample.domain.model.user.RandomUserPicture;
 import co.develoop.androidcleanarchitecturesample.screen.list.simple.adapter.injection.DaggerRandomUserSimpleListAdapterComponent;
 
-public class RandomUserSimpleListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder> implements RandomUserSimpleListRecyclerViewAdapterPresenterView {
+public class RandomUserSimpleListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder<RandomUser>> implements RandomUserSimpleListRecyclerViewAdapterPresenterView {
 
     @Inject
     public Context mContext;
@@ -42,12 +42,12 @@ public class RandomUserSimpleListRecyclerViewAdapter extends RecyclerView.Adapte
     }
 
     @Override
-    public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == AdapterItem.Type.ITEM.ordinal()) {
+    public RecyclerViewHolder<RandomUser> onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == RecyclerViewAdapterItem.Type.ITEM.ordinal()) {
             return new RandomUserListItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_item, parent, false));
-        } else if (viewType == AdapterItem.Type.FAKE.ordinal()) {
+        } else if (viewType == RecyclerViewAdapterItem.Type.FAKE.ordinal()) {
             return new RandomUserListFakeItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_fake_item, parent, false));
-        } else if (viewType == AdapterItem.Type.LOADING.ordinal()) {
+        } else if (viewType == RecyclerViewAdapterItem.Type.LOADING.ordinal()) {
             return new RandomUserListLoadingItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_loading_item, parent, false));
         } else {
             return new RandomUserListErrorItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_error_item, parent, false));
@@ -55,7 +55,7 @@ public class RandomUserSimpleListRecyclerViewAdapter extends RecyclerView.Adapte
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerViewHolder<RandomUser> holder, int position) {
         holder.configure(mContext, mRandomUserSimpleListAdapterPresenter.getListData().get(position));
     }
 
@@ -105,7 +105,7 @@ public class RandomUserSimpleListRecyclerViewAdapter extends RecyclerView.Adapte
         };
     }
 
-    public class RandomUserListItemViewHolder extends RecyclerViewHolder<RandomUser> {
+    class RandomUserListItemViewHolder extends RecyclerViewHolder<RandomUser> {
 
         @BindView(R.id.random_user_list_item_fullname)
         TextView fullnameTextView;

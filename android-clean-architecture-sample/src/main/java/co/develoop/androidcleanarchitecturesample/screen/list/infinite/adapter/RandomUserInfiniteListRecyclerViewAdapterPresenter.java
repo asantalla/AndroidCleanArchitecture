@@ -1,4 +1,4 @@
-package co.develoop.androidcleanarchitecturesample.screen.list.simple.adapter;
+package co.develoop.androidcleanarchitecturesample.screen.list.infinite.adapter;
 
 import android.view.View;
 
@@ -6,22 +6,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.develoop.androidcleanarchitecture.client.transaction.Transaction;
+import co.develoop.androidcleanarchitecture.screen.presenter.recyclerview.InfiniteRecyclerViewAdapterPresenter;
 import co.develoop.androidcleanarchitecture.screen.presenter.recyclerview.RecyclerViewAdapterItem;
-import co.develoop.androidcleanarchitecture.screen.presenter.recyclerview.SimpleRecyclerViewAdapterPresenter;
 import co.develoop.androidcleanarchitecturesample.domain.model.user.RandomUser;
 import co.develoop.androidcleanarchitecturesample.usecase.user.LoadRandomUserListUseCase;
+import co.develoop.androidcleanarchitecturesample.usecase.user.SetLoadRandomUserListPaginationUseCase;
 import io.reactivex.Completable;
 import io.reactivex.CompletableEmitter;
 import io.reactivex.CompletableOnSubscribe;
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 
-public class RandomUserSimpleListRecyclerViewAdapterPresenter extends SimpleRecyclerViewAdapterPresenter<RandomUserSimpleListRecyclerViewAdapterPresenterView, RandomUser> {
+public class RandomUserInfiniteListRecyclerViewAdapterPresenter extends InfiniteRecyclerViewAdapterPresenter<RandomUserInfiniteListRecyclerViewAdapterPresenterView, RandomUser> {
 
     private LoadRandomUserListUseCase mLoadRandomUserListUseCase;
+    private SetLoadRandomUserListPaginationUseCase mSetLoadRandomUserListPaginationUseCase;
 
-    public RandomUserSimpleListRecyclerViewAdapterPresenter(LoadRandomUserListUseCase loadRandomUserListUseCase) {
+    public RandomUserInfiniteListRecyclerViewAdapterPresenter(LoadRandomUserListUseCase loadRandomUserListUseCase, SetLoadRandomUserListPaginationUseCase setLoadRandomUserListPaginationUseCase) {
         mLoadRandomUserListUseCase = loadRandomUserListUseCase;
+        mSetLoadRandomUserListPaginationUseCase = setLoadRandomUserListPaginationUseCase;
     }
 
     @Override
@@ -46,13 +49,7 @@ public class RandomUserSimpleListRecyclerViewAdapterPresenter extends SimpleRecy
 
     @Override
     public List<RandomUser> getNetworkErrorList() {
-        List<RandomUser> networkErrorList = new ArrayList<>();
-
-        RandomUser fakeItem = new RandomUser("error@gmail.com");
-        fakeItem.setType(RecyclerViewAdapterItem.Type.ERROR);
-        networkErrorList.add(fakeItem);
-
-        return networkErrorList;
+        return null;
     }
 
     @Override
@@ -70,5 +67,21 @@ public class RandomUserSimpleListRecyclerViewAdapterPresenter extends SimpleRecy
                 e.onComplete();
             }
         });
+    }
+
+    @Override
+    public List<RandomUser> getFooterList() {
+        List<RandomUser> loadingList = new ArrayList<>();
+
+        RandomUser fakeItem = new RandomUser("loading@gmail.com");
+        fakeItem.setType(RecyclerViewAdapterItem.Type.FOOTER);
+        loadingList.add(fakeItem);
+
+        return loadingList;
+    }
+
+    @Override
+    public Observable<Object> getPaginationObservable(int page) {
+        return mSetLoadRandomUserListPaginationUseCase.bind(new SetLoadRandomUserListPaginationUseCase.Params(page));
     }
 }

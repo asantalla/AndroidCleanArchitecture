@@ -22,9 +22,12 @@ class EndlessRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
 
     private Observer<? super Integer> mObserver;
 
-    EndlessRecyclerViewScrollListener(RecyclerView.LayoutManager layoutManager, Observer<? super Integer> observer) {
+    private int minTotalItemCount;
+
+    EndlessRecyclerViewScrollListener(RecyclerView.LayoutManager layoutManager, Observer<? super Integer> observer, boolean hasLoadingView) {
         mLayoutManager = layoutManager;
         mObserver = observer;
+        minTotalItemCount = hasLoadingView ? 1 : 0;
     }
 
     private int getLastVisibleItem(int[] lastVisibleItemPositions) {
@@ -70,7 +73,7 @@ class EndlessRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
         // If it’s still loading, we check to see if the dataset count has
         // changed, if so we conclude it has finished loading and update the current page
         // number and total item count.
-        if (loading && (totalItemCount > previousTotalItemCount)) {
+        if (loading && (totalItemCount > previousTotalItemCount && totalItemCount > minTotalItemCount)) {
             loading = false;
             previousTotalItemCount = totalItemCount;
         }

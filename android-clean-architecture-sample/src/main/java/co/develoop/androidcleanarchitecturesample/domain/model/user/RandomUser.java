@@ -4,9 +4,9 @@ import org.joda.time.DateTime;
 
 import java.util.Objects;
 
-import co.develoop.androidcleanarchitecture.screen.presenter.recyclerview.AdapterItem;
+import co.develoop.androidcleanarchitecture.screen.presenter.recyclerview.RecyclerViewAdapterItem;
 
-public class RandomUser implements Comparable<RandomUser>, AdapterItem {
+public class RandomUser implements Comparable<RandomUser>, RecyclerViewAdapterItem {
 
     private String email;
     private String phone;

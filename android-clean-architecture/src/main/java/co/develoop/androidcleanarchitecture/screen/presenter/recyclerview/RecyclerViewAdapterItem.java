@@ -1,6 +1,6 @@
 package co.develoop.androidcleanarchitecture.screen.presenter.recyclerview;
 
-public interface AdapterItem {
+public interface RecyclerViewAdapterItem {
 
     void setType(Type type);
 

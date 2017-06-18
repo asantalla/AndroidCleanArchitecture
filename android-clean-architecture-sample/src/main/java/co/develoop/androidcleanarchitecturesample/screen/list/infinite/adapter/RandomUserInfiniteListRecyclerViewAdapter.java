@@ -1,13 +1,11 @@
 package co.develoop.androidcleanarchitecturesample.screen.list.infinite.adapter;
 
 import android.content.Context;
-import android.support.design.widget.Snackbar;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,7 +17,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import co.develoop.androidcleanarchitecture.screen.presenter.actions.PresenterAction;
 import co.develoop.androidcleanarchitecture.screen.presenter.actions.PresenterBinder;
-import co.develoop.androidcleanarchitecture.screen.presenter.recyclerview.AdapterItem;
+import co.develoop.androidcleanarchitecture.screen.presenter.recyclerview.RecyclerViewAdapterItem;
 import co.develoop.androidcleanarchitecture.screen.view.recycler.RecyclerViewHolder;
 import co.develoop.androidcleanarchitecturesample.R;
 import co.develoop.androidcleanarchitecturesample.RandomUsersApplication;
@@ -27,19 +25,17 @@ import co.develoop.androidcleanarchitecturesample.domain.model.user.RandomUser;
 import co.develoop.androidcleanarchitecturesample.domain.model.user.RandomUserPicture;
 import co.develoop.androidcleanarchitecturesample.screen.list.infinite.adapter.injection.DaggerRandomUserInfiniteListAdapterComponent;
 
-public class RandomUserInfiniteListAdapter extends RecyclerView.Adapter<RecyclerViewHolder> implements RandomUserInfiniteListAdapterPresenterView {
+public class RandomUserInfiniteListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder> implements RandomUserInfiniteListRecyclerViewAdapterPresenterView {
 
     @Inject
     public Context mContext;
 
     @Inject
-    public RandomUserInfiniteListAdapterPresenter mRandomUserListAdapterPresenter;
+    public RandomUserInfiniteListRecyclerViewAdapterPresenter mRandomUserInfiniteListRecyclerViewAdapterPresenter;
 
     private RecyclerView mRecyclerView;
 
-    private Snackbar mSnackbar;
-
-    public RandomUserInfiniteListAdapter() {
+    public RandomUserInfiniteListRecyclerViewAdapter() {
         DaggerRandomUserInfiniteListAdapterComponent.builder()
                 .appComponent(RandomUsersApplication.daggerAppComponent())
                 .build()
@@ -48,31 +44,30 @@ public class RandomUserInfiniteListAdapter extends RecyclerView.Adapter<Recycler
 
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == AdapterItem.Type.LOADING.ordinal()) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_progress_item, null);
-            return new RandomUserListProgressItemViewHolder(view);
-        } else if (viewType == AdapterItem.Type.FOOTER.ordinal()) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_footer_item, null);
-            return new RandomUserListFooterItemViewHolder(view);
+        if (viewType == RecyclerViewAdapterItem.Type.ITEM.ordinal()) {
+            return new RandomUserListItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_item, null, false));
+        } else if (viewType == RecyclerViewAdapterItem.Type.FAKE.ordinal()) {
+            return new RandomUserListFakeItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_fake_item, null, false));
+        } else if (viewType == RecyclerViewAdapterItem.Type.LOADING.ordinal()) {
+            return new RandomUserListLoadingItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_loading_item, null, false));
         } else {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_item, null);
-            return new RandomUserListItemViewHolder(view);
+            return new RandomUserListFooterItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_footer_item, null, false));
         }
     }
 
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
-        holder.configure(mContext, mRandomUserListAdapterPresenter.getListData().get(position));
+        holder.configure(mContext, mRandomUserInfiniteListRecyclerViewAdapterPresenter.getListData().get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mRandomUserListAdapterPresenter.getListData().size();
+        return mRandomUserInfiniteListRecyclerViewAdapterPresenter.getListData().size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        return mRandomUserListAdapterPresenter.getListData().get(position).getType().ordinal();
+        return mRandomUserInfiniteListRecyclerViewAdapterPresenter.getListData().get(position).getType().ordinal();
     }
 
     @Override
@@ -81,22 +76,14 @@ public class RandomUserInfiniteListAdapter extends RecyclerView.Adapter<Recycler
 
         mRecyclerView = recyclerView;
 
-        mSnackbar = Snackbar.make(mRecyclerView, "There was a network error ...", Snackbar.LENGTH_INDEFINITE);
-        mSnackbar.setAction("Retry", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        mRandomUserListAdapterPresenter.init(this);
+        mRandomUserInfiniteListRecyclerViewAdapterPresenter.init(this);
     }
 
     @Override
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
 
-        mRandomUserListAdapterPresenter.clear();
+        mRandomUserInfiniteListRecyclerViewAdapterPresenter.clear();
     }
 
     @Override
@@ -105,27 +92,12 @@ public class RandomUserInfiniteListAdapter extends RecyclerView.Adapter<Recycler
     }
 
     @Override
-    public Snackbar getSnackbar() {
-        return mSnackbar;
-    }
-
-    @Override
-    public Boolean showLoadingView() {
-        return true;
-    }
-
-    @Override
-    public Boolean showFooterView() {
-        return true;
-    }
-
-    @Override
     public PresenterBinder<DiffUtil.DiffResult> getDiffResultBinder() {
         return new PresenterBinder<DiffUtil.DiffResult>() {
 
             @Override
             public void setData(DiffUtil.DiffResult result) {
-                result.dispatchUpdatesTo(RandomUserInfiniteListAdapter.this);
+                result.dispatchUpdatesTo(RandomUserInfiniteListRecyclerViewAdapter.this);
             }
         };
     }
@@ -155,13 +127,13 @@ public class RandomUserInfiniteListAdapter extends RecyclerView.Adapter<Recycler
         @BindView(R.id.random_user_list_item_image)
         CircularImageView imageCircularImageView;
 
-        public RandomUserListItemViewHolder(View itemView) {
+        RandomUserListItemViewHolder(View itemView) {
             super(itemView);
         }
 
         @Override
         public void configure(Context context, final RandomUser randomUser) {
-            mRandomUserListAdapterPresenter.bindItemClick(itemView, randomUser);
+            mRandomUserInfiniteListRecyclerViewAdapterPresenter.bindItemClick(itemView, randomUser);
 
             RandomUserPicture randomUserPicture = randomUser.getPicture();
 
@@ -178,24 +150,31 @@ public class RandomUserInfiniteListAdapter extends RecyclerView.Adapter<Recycler
         }
     }
 
-    class RandomUserListProgressItemViewHolder extends RecyclerViewHolder<RandomUser> {
+    private class RandomUserListFakeItemViewHolder extends RecyclerViewHolder<RandomUser> {
 
-        @BindView(R.id.random_user_list_item_progress_bar)
-        ProgressBar progressBar;
-
-        public RandomUserListProgressItemViewHolder(View itemView) {
+        RandomUserListFakeItemViewHolder(View itemView) {
             super(itemView);
         }
 
         @Override
         public void configure(Context context, RandomUser item) {
-            progressBar.setIndeterminate(true);
         }
     }
 
-    class RandomUserListFooterItemViewHolder extends RecyclerViewHolder<RandomUser> {
+    private class RandomUserListLoadingItemViewHolder extends RecyclerViewHolder<RandomUser> {
 
-        public RandomUserListFooterItemViewHolder(View itemView) {
+        RandomUserListLoadingItemViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        public void configure(Context context, RandomUser item) {
+        }
+    }
+
+    private class RandomUserListFooterItemViewHolder extends RecyclerViewHolder<RandomUser> {
+
+        RandomUserListFooterItemViewHolder(View itemView) {
             super(itemView);
         }
 
