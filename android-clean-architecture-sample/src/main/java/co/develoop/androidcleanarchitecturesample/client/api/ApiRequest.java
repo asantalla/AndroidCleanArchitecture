@@ -36,7 +36,7 @@ public class ApiRequest<T> {
                         observer.onComplete();
                     }
                 })
-                .timeout(20, TimeUnit.SECONDS, new Observable<Transaction<T>>() {
+                .timeout(5, TimeUnit.SECONDS, new Observable<Transaction<T>>() {
 
                     @Override
                     protected void subscribeActual(Observer<? super Transaction<T>> observer) {

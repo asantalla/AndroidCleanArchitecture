@@ -45,8 +45,6 @@ public class RandomUserSimpleListRecyclerViewAdapter extends RecyclerView.Adapte
     public RecyclerViewHolder<RandomUser> onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == RecyclerViewAdapterItem.Type.ITEM.ordinal()) {
             return new RandomUserListItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_item, parent, false));
-        } else if (viewType == RecyclerViewAdapterItem.Type.FAKE.ordinal()) {
-            return new RandomUserListFakeItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_fake_item, parent, false));
         } else if (viewType == RecyclerViewAdapterItem.Type.LOADING.ordinal()) {
             return new RandomUserListLoadingItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_loading_item, parent, false));
         } else {
@@ -139,17 +137,6 @@ public class RandomUserSimpleListRecyclerViewAdapter extends RecyclerView.Adapte
             fullnameTextView.setText(randomUser.getName().toString());
             emailTextView.setText(randomUser.getEmail());
             phoneTextView.setText(randomUser.getPhone());
-        }
-    }
-
-    private class RandomUserListFakeItemViewHolder extends RecyclerViewHolder<RandomUser> {
-
-        RandomUserListFakeItemViewHolder(View itemView) {
-            super(itemView);
-        }
-
-        @Override
-        public void configure(Context context, RandomUser item) {
         }
     }
 

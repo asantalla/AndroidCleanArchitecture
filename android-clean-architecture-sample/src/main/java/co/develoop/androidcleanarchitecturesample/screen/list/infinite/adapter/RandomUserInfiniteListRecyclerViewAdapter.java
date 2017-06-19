@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jakewharton.rxbinding2.view.RxView;
 import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
 
@@ -46,10 +47,10 @@ public class RandomUserInfiniteListRecyclerViewAdapter extends RecyclerView.Adap
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == RecyclerViewAdapterItem.Type.ITEM.ordinal()) {
             return new RandomUserListItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_item, null, false));
-        } else if (viewType == RecyclerViewAdapterItem.Type.FAKE.ordinal()) {
-            return new RandomUserListFakeItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_fake_item, null, false));
         } else if (viewType == RecyclerViewAdapterItem.Type.LOADING.ordinal()) {
             return new RandomUserListLoadingItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_loading_item, null, false));
+        } else if (viewType == RecyclerViewAdapterItem.Type.ERROR.ordinal()) {
+            return new RandomUserListErrorItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_error_item, null, false));
         } else {
             return new RandomUserListFooterItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_footer_item, null, false));
         }
@@ -150,14 +151,15 @@ public class RandomUserInfiniteListRecyclerViewAdapter extends RecyclerView.Adap
         }
     }
 
-    private class RandomUserListFakeItemViewHolder extends RecyclerViewHolder<RandomUser> {
+    private class RandomUserListErrorItemViewHolder extends RecyclerViewHolder<RandomUser> {
 
-        RandomUserListFakeItemViewHolder(View itemView) {
+        RandomUserListErrorItemViewHolder(View itemView) {
             super(itemView);
         }
 
         @Override
         public void configure(Context context, RandomUser item) {
+            mRandomUserInfiniteListRecyclerViewAdapterPresenter.bindReloadDataObservable(RxView.clicks(itemView.findViewById(R.id.retry_button)));
         }
     }
 

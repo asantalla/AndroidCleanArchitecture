@@ -26,7 +26,7 @@ import io.reactivex.schedulers.Schedulers;
 public abstract class RecyclerViewAdapterPresenter<V extends RecyclerViewAdapterPresenterView, T extends RecyclerViewAdapterItem> extends Presenter<V> {
 
     List<T> mList;
-    List<T> mLoadingList;
+    private List<T> mLoadingList;
     private List<T> mNetworkErrorList;
 
     @Override
@@ -104,14 +104,10 @@ public abstract class RecyclerViewAdapterPresenter<V extends RecyclerViewAdapter
     }
 
     Boolean hasLoadingView() {
-        return mLoadingList != null && mLoadingList.size() > 0;
+        return mLoadingList != null && !mLoadingList.isEmpty();
     }
 
-    private void loadData() {
-        addSubscription(load().subscribe(showResults()));
-    }
-
-    private Observable<Transaction<List<T>>> loadLoadingData() {
+    Observable<Transaction<List<T>>> loadLoadingData() {
         return Observable.create(new ObservableOnSubscribe<Transaction<List<T>>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Transaction<List<T>>> observer) throws Exception {
@@ -119,6 +115,27 @@ public abstract class RecyclerViewAdapterPresenter<V extends RecyclerViewAdapter
                 observer.onComplete();
             }
         });
+    }
+
+    Function<Transaction<List<T>>, Observable<DiffUtil.DiffResult>> calculateRecyclerViewDiffs() {
+        return new Function<Transaction<List<T>>, Observable<DiffUtil.DiffResult>>() {
+
+            @Override
+            public Observable<DiffUtil.DiffResult> apply(final @NonNull Transaction<List<T>> transaction) throws Exception {
+                return Observable.create(new ObservableOnSubscribe<DiffUtil.DiffResult>() {
+
+                    @Override
+                    public void subscribe(@NonNull ObservableEmitter<DiffUtil.DiffResult> observer) throws Exception {
+                        observer.onNext(calculateRecyclerViewDiffDiffResult(transaction.isSuccess() ? transaction.getData() : mNetworkErrorList));
+                        observer.onComplete();
+                    }
+                }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+            }
+        };
+    }
+
+    private void loadData() {
+        addSubscription(load().subscribe(showResults()));
     }
 
     private Observable<Transaction<List<T>>> loadObservableData() {
@@ -148,23 +165,6 @@ public abstract class RecyclerViewAdapterPresenter<V extends RecyclerViewAdapter
                 }
 
                 return newTransaction;
-            }
-        };
-    }
-
-    private Function<Transaction<List<T>>, Observable<DiffUtil.DiffResult>> calculateRecyclerViewDiffs() {
-        return new Function<Transaction<List<T>>, Observable<DiffUtil.DiffResult>>() {
-
-            @Override
-            public Observable<DiffUtil.DiffResult> apply(final @NonNull Transaction<List<T>> transaction) throws Exception {
-                return Observable.create(new ObservableOnSubscribe<DiffUtil.DiffResult>() {
-
-                    @Override
-                    public void subscribe(@NonNull ObservableEmitter<DiffUtil.DiffResult> observer) throws Exception {
-                        observer.onNext(calculateRecyclerViewDiffDiffResult(transaction.isSuccess() ? transaction.getData() : mNetworkErrorList));
-                        observer.onComplete();
-                    }
-                }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
             }
         };
     }

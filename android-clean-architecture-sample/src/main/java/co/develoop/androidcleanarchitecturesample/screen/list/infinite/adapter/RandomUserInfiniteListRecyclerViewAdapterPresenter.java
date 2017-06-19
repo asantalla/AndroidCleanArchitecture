@@ -29,15 +29,6 @@ public class RandomUserInfiniteListRecyclerViewAdapterPresenter extends Infinite
 
     @Override
     public List<RandomUser> getLoadingList() {
-//        List<RandomUser> fakeList = new ArrayList<>();
-//
-//        for (int i = 0; i < 10; i++) {
-//            RandomUser fakeItem = new RandomUser("fake" + i + "@gmail.com");
-//            fakeItem.setType(RecyclerViewAdapterItem.Type.FAKE);
-//            fakeList.add(fakeItem);
-//        }
-//
-//        return fakeList;
         List<RandomUser> loadingList = new ArrayList<>();
 
         RandomUser fakeItem = new RandomUser("loading@gmail.com");
@@ -49,7 +40,13 @@ public class RandomUserInfiniteListRecyclerViewAdapterPresenter extends Infinite
 
     @Override
     public List<RandomUser> getNetworkErrorList() {
-        return null;
+        List<RandomUser> loadingList = new ArrayList<>();
+
+        RandomUser fakeItem = new RandomUser("error@gmail.com");
+        fakeItem.setType(RecyclerViewAdapterItem.Type.ERROR);
+        loadingList.add(fakeItem);
+
+        return loadingList;
     }
 
     @Override
@@ -73,7 +70,7 @@ public class RandomUserInfiniteListRecyclerViewAdapterPresenter extends Infinite
     public List<RandomUser> getFooterList() {
         List<RandomUser> loadingList = new ArrayList<>();
 
-        RandomUser fakeItem = new RandomUser("loading@gmail.com");
+        RandomUser fakeItem = new RandomUser("footer@gmail.com");
         fakeItem.setType(RecyclerViewAdapterItem.Type.FOOTER);
         loadingList.add(fakeItem);
 

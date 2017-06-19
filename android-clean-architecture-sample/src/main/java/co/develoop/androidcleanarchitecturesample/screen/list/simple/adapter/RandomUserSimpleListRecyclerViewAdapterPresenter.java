@@ -26,15 +26,6 @@ public class RandomUserSimpleListRecyclerViewAdapterPresenter extends SimpleRecy
 
     @Override
     public List<RandomUser> getLoadingList() {
-//        List<RandomUser> fakeList = new ArrayList<>();
-//
-//        for (int i = 0; i < 10; i++) {
-//            RandomUser fakeItem = new RandomUser("fake" + i + "@gmail.com");
-//            fakeItem.setType(RecyclerViewAdapterItem.Type.FAKE);
-//            fakeList.add(fakeItem);
-//        }
-//
-//        return fakeList;
         List<RandomUser> loadingList = new ArrayList<>();
 
         RandomUser fakeItem = new RandomUser("loading@gmail.com");
