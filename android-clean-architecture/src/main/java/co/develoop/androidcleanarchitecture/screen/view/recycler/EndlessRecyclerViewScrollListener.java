@@ -4,6 +4,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 
 import io.reactivex.Observer;
 
@@ -73,7 +74,7 @@ class EndlessRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
         // If it’s still loading, we check to see if the dataset count has
         // changed, if so we conclude it has finished loading and update the current page
         // number and total item count.
-        if (loading && (totalItemCount > previousTotalItemCount && totalItemCount > minTotalItemCount)) {
+        if (loading && (totalItemCount > previousTotalItemCount && (totalItemCount - previousTotalItemCount) > minTotalItemCount)) {
             loading = false;
             previousTotalItemCount = totalItemCount;
         }
@@ -83,9 +84,9 @@ class EndlessRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
         // If we do need to reload some more data, we execute onLoadMore to fetch the data.
         // threshold should reflect how many total columns there are too
         if (!loading && (lastVisibleItemPosition + visibleThreshold) > totalItemCount) {
+            loading = true;
             currentPage++;
             mObserver.onNext(currentPage);
-            loading = true;
         }
     }
 }

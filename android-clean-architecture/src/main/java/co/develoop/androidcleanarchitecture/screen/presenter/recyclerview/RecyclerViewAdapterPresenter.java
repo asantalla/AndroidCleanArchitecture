@@ -11,7 +11,7 @@ import java.util.List;
 
 import co.develoop.androidcleanarchitecture.client.transaction.Transaction;
 import co.develoop.androidcleanarchitecture.client.transaction.TransactionStatus;
-import co.develoop.androidcleanarchitecture.screen.presenter.Presenter;
+import co.develoop.androidcleanarchitecture.screen.presenter.AdapterPresenter;
 import co.develoop.androidcleanarchitecture.screen.presenter.actions.PresenterBinder;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
@@ -23,7 +23,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-public abstract class RecyclerViewAdapterPresenter<V extends RecyclerViewAdapterPresenterView, T extends RecyclerViewAdapterItem> extends Presenter<V> {
+public abstract class RecyclerViewAdapterPresenter<V extends RecyclerViewAdapterPresenterView, T extends RecyclerViewAdapterItem> extends AdapterPresenter<V> {
 
     List<T> mList;
     private List<T> mLoadingList;
@@ -31,23 +31,14 @@ public abstract class RecyclerViewAdapterPresenter<V extends RecyclerViewAdapter
 
     @Override
     protected final void init() {
-        if (mList == null) {
-            mList = new LinkedList<>();
-        }
-
-        mLoadingList = getLoadingList();
-        if (mLoadingList == null) {
-            mLoadingList = new ArrayList<>();
-        }
-        mList.addAll(mLoadingList);
-
-        mNetworkErrorList = getNetworkErrorList();
-        if (mNetworkErrorList == null) {
-            mNetworkErrorList = new ArrayList<>();
-        }
-
+        initLists();
+        initialize();
         loadData();
+    }
 
+    @Override
+    protected void initWithoutLoad() {
+        initLists();
         initialize();
     }
 
@@ -85,6 +76,19 @@ public abstract class RecyclerViewAdapterPresenter<V extends RecyclerViewAdapter
                         return load();
                     }
                 })
+                .subscribe(showResults()));
+    }
+
+    public void bindClearDataObservable(Observable<Object> clearObservable) {
+        addSubscription(clearObservable
+                .flatMap(new Function<Object, Observable<Transaction<List<T>>>>() {
+
+                    @Override
+                    public Observable<Transaction<List<T>>> apply(@NonNull Object o) throws Exception {
+                        return loadEmptyData();
+                    }
+                })
+                .flatMap(calculateRecyclerViewDiffs())
                 .subscribe(showResults()));
     }
 
@@ -171,6 +175,34 @@ public abstract class RecyclerViewAdapterPresenter<V extends RecyclerViewAdapter
 
     private PresenterBinder<DiffUtil.DiffResult> getDiffResultBinder() {
         return getView().getDiffResultBinder();
+    }
+
+    private void initLists() {
+        if (mList == null) {
+            mList = new LinkedList<>();
+        }
+
+        mLoadingList = getLoadingList();
+        if (mLoadingList == null) {
+            mLoadingList = new ArrayList<>();
+        }
+        mList.addAll(mLoadingList);
+
+        mNetworkErrorList = getNetworkErrorList();
+        if (mNetworkErrorList == null) {
+            mNetworkErrorList = new ArrayList<>();
+        }
+    }
+
+    private Observable<Transaction<List<T>>> loadEmptyData() {
+        return Observable.create(new ObservableOnSubscribe<Transaction<List<T>>>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Transaction<List<T>>> observer) throws Exception {
+                List<T> emptyList = new ArrayList<>();
+                observer.onNext(new Transaction<>(emptyList, TransactionStatus.SUCCESS));
+                observer.onComplete();
+            }
+        });
     }
 
     public abstract List<T> getLoadingList();
