@@ -15,16 +15,33 @@ import io.reactivex.functions.Function;
 
 public abstract class InfiniteRecyclerViewAdapterPresenter<V extends InfiniteRecyclerViewAdapterPresenterView, T extends RecyclerViewAdapterItem> extends RecyclerViewAdapterPresenter<V, T> {
 
+    private List<T> mFullscreenLoadingList;
+    private List<T> mFullscreenNetworkErrorList;
     private List<T> mFooterList;
 
     @Override
     protected void initialize() {
-        bindEndlessRecyclerViewScrollObservable();
+        mFullscreenLoadingList = getFullscreenLoadingList();
+        if (mFullscreenLoadingList == null) {
+            mFullscreenLoadingList = new ArrayList<>();
+        }
+
+        mFullscreenNetworkErrorList = getFullscreenNetworkErrorList();
+        if (mFullscreenNetworkErrorList == null) {
+            mFullscreenNetworkErrorList = new ArrayList<>();
+        }
 
         mFooterList = getFooterList();
         if (mFooterList == null) {
             mFooterList = new ArrayList<>();
         }
+
+        if (hasFullscreenLoadingView()) {
+            mList.remove(mList.size() - 1);
+            mList.addAll(mFullscreenLoadingList);
+        }
+
+        bindEndlessRecyclerViewScrollObservable();
     }
 
     private void bindEndlessRecyclerViewScrollObservable() {
@@ -59,6 +76,14 @@ public abstract class InfiniteRecyclerViewAdapterPresenter<V extends InfiniteRec
         };
     }
 
+    private Boolean hasFullscreenLoadingView() {
+        return mFullscreenLoadingList != null && !mFullscreenLoadingList.isEmpty();
+    }
+
+    private Boolean hasFullscreenNetworkErrorView() {
+        return mFullscreenNetworkErrorList != null && !mFullscreenNetworkErrorList.isEmpty();
+    }
+
     private Boolean hasFooterView() {
         return mFooterList != null && !mFooterList.isEmpty();
     }
@@ -72,7 +97,11 @@ public abstract class InfiniteRecyclerViewAdapterPresenter<V extends InfiniteRec
         List<T> oldList = new LinkedList<>(mList);
 
         if (!mList.isEmpty()) {
-            if (getLastItemType().equals(RecyclerViewAdapterItem.Type.LOADING) || getLastItemType().equals(RecyclerViewAdapterItem.Type.ERROR) || getLastItemType().equals(RecyclerViewAdapterItem.Type.FOOTER)) {
+            if (getLastItemType().equals(RecyclerViewAdapterItem.Type.FULLSCREEN_LOADING) ||
+                    getLastItemType().equals(RecyclerViewAdapterItem.Type.LOADING) ||
+                    getLastItemType().equals(RecyclerViewAdapterItem.Type.FULLSCREEN_ERROR) ||
+                    getLastItemType().equals(RecyclerViewAdapterItem.Type.ERROR) ||
+                    getLastItemType().equals(RecyclerViewAdapterItem.Type.FOOTER)) {
                 mList.remove(mList.size() - 1);
             }
         }
@@ -85,8 +114,30 @@ public abstract class InfiniteRecyclerViewAdapterPresenter<V extends InfiniteRec
             }
         }
 
+        if (mList.size() == 1) {
+            RecyclerViewAdapterItem item = mList.get(0);
+
+            if (item.getType().equals(RecyclerViewAdapterItem.Type.LOADING)) {
+                if (hasFullscreenLoadingView()) {
+                    mList.remove(mList.size() - 1);
+                    mList.addAll(mFullscreenLoadingList);
+                }
+            }
+
+            if (item.getType().equals(RecyclerViewAdapterItem.Type.ERROR)) {
+                if (hasFullscreenNetworkErrorView()) {
+                    mList.remove(mList.size() - 1);
+                    mList.addAll(mFullscreenNetworkErrorList);
+                }
+            }
+        }
+
         return DiffUtil.calculateDiff(new RecyclerViewDiffUtilCallback<>(oldList, mList));
     }
+
+    public abstract List<T> getFullscreenLoadingList();
+
+    public abstract List<T> getFullscreenNetworkErrorList();
 
     public abstract List<T> getFooterList();
 

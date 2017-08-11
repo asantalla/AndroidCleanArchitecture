@@ -7,6 +7,6 @@ public interface RecyclerViewAdapterItem {
     Type getType();
 
     enum Type {
-        ITEM, LOADING, FOOTER, ERROR
+        ITEM, FULLSCREEN_LOADING, LOADING, FULLSCREEN_ERROR, ERROR, FOOTER
     }
 }

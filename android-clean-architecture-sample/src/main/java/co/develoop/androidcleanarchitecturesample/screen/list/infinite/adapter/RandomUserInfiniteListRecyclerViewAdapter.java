@@ -47,8 +47,12 @@ public class RandomUserInfiniteListRecyclerViewAdapter extends RecyclerView.Adap
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == RecyclerViewAdapterItem.Type.ITEM.ordinal()) {
             return new RandomUserListItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_item, null, false));
+        } else if (viewType == RecyclerViewAdapterItem.Type.FULLSCREEN_LOADING.ordinal()) {
+            return new RandomUserListLoadingItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_loading_item, parent, false));
         } else if (viewType == RecyclerViewAdapterItem.Type.LOADING.ordinal()) {
             return new RandomUserListLoadingItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_loading_item, null, false));
+        } else if (viewType == RecyclerViewAdapterItem.Type.FULLSCREEN_ERROR.ordinal()) {
+            return new RandomUserListErrorItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_error_item, parent, false));
         } else if (viewType == RecyclerViewAdapterItem.Type.ERROR.ordinal()) {
             return new RandomUserListErrorItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.random_user_list_error_item, null, false));
         } else {

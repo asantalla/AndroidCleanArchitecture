@@ -67,6 +67,28 @@ public class RandomUserInfiniteListRecyclerViewAdapterPresenter extends Infinite
     }
 
     @Override
+    public List<RandomUser> getFullscreenLoadingList() {
+        List<RandomUser> loadingList = new ArrayList<>();
+
+        RandomUser fakeItem = new RandomUser("error@gmail.com");
+        fakeItem.setType(RecyclerViewAdapterItem.Type.FULLSCREEN_LOADING);
+        loadingList.add(fakeItem);
+
+        return loadingList;
+    }
+
+    @Override
+    public List<RandomUser> getFullscreenNetworkErrorList() {
+        List<RandomUser> loadingList = new ArrayList<>();
+
+        RandomUser fakeItem = new RandomUser("error@gmail.com");
+        fakeItem.setType(RecyclerViewAdapterItem.Type.FULLSCREEN_ERROR);
+        loadingList.add(fakeItem);
+
+        return loadingList;
+    }
+
+    @Override
     public List<RandomUser> getFooterList() {
         List<RandomUser> loadingList = new ArrayList<>();
 
