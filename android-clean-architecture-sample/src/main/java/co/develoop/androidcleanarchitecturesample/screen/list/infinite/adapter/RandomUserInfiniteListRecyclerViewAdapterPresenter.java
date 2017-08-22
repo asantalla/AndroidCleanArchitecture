@@ -60,7 +60,7 @@ public class RandomUserInfiniteListRecyclerViewAdapterPresenter extends Infinite
 
             @Override
             public void subscribe(@NonNull CompletableEmitter e) throws Exception {
-                getView().showName(randomUser.getName().toString()).execute();
+                getView().showName(randomUser.getName().toString());
                 e.onComplete();
             }
         });

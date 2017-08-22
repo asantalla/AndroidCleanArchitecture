@@ -16,7 +16,6 @@ import com.squareup.picasso.Picasso;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import co.develoop.androidcleanarchitecture.screen.presenter.actions.PresenterAction;
 import co.develoop.androidcleanarchitecture.screen.presenter.actions.PresenterBinder;
 import co.develoop.androidcleanarchitecture.screen.presenter.recyclerview.RecyclerViewAdapterItem;
 import co.develoop.androidcleanarchitecture.screen.view.recycler.RecyclerViewHolder;
@@ -93,14 +92,8 @@ public class RandomUserSimpleListRecyclerViewAdapter extends RecyclerView.Adapte
     }
 
     @Override
-    public PresenterAction showName(final String name) {
-        return new PresenterAction() {
-
-            @Override
-            public void execute() {
-                Toast.makeText(mContext, "Name: " + name, Toast.LENGTH_LONG).show();
-            }
-        };
+    public void showName(final String name) {
+        Toast.makeText(mContext, "Name: " + name, Toast.LENGTH_LONG).show();
     }
 
     class RandomUserListItemViewHolder extends RecyclerViewHolder<RandomUser> {
