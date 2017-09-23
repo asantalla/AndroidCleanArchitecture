@@ -2,11 +2,9 @@ package co.develoop.androidcleanarchitecturesample.domain.model.user;
 
 import org.joda.time.DateTime;
 
-import java.util.Objects;
+import co.develoop.androidcleanarchitecture.screen.presenter.recyclerview.RecyclerViewAdapterItem;
 
-import co.develoop.androidcleanarchitecture.screen.presenter.AdapterItem;
-
-public class RandomUser implements Comparable<RandomUser>, AdapterItem {
+public class RandomUser implements Comparable<RandomUser>, RecyclerViewAdapterItem {
 
     private String email;
     private String phone;
@@ -88,19 +86,6 @@ public class RandomUser implements Comparable<RandomUser>, AdapterItem {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RandomUser that = (RandomUser) o;
-        return Objects.equals(email, that.email);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(email);
-    }
-
-    @Override
     public int compareTo(RandomUser otherRandomUser) {
         return email.compareToIgnoreCase(otherRandomUser.getEmail());
     }
@@ -113,5 +98,24 @@ public class RandomUser implements Comparable<RandomUser>, AdapterItem {
     @Override
     public Type getType() {
         return mAdapterItemType;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RandomUser that = (RandomUser) o;
+
+        if (!email.equals(that.email)) return false;
+        return mAdapterItemType == that.mAdapterItemType;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = email.hashCode();
+        result = 31 * result + mAdapterItemType.hashCode();
+        return result;
     }
 }

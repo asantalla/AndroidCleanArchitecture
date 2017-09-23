@@ -1,6 +1,0 @@
-package co.develoop.androidcleanarchitecturesample.screen.list.infinite.adapter;
-
-import co.develoop.androidcleanarchitecture.screen.presenter.InfiniteAdapterPresenterView;
-
-public interface RandomUserInfiniteListAdapterPresenterView extends InfiniteAdapterPresenterView {
-}

@@ -1,17 +1,19 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'com.jfrog.bintray'
+
+def version_code = 1
+def version_name = "1.0.0"
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
-
-    publishNonDefault true
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
 
     defaultConfig {
-        minSdkVersion 17
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion 19
+        targetSdkVersion 26
+        versionCode version_code
+        versionName version_name
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -24,7 +26,7 @@ android {
     }
 }
 
-def support_version = '25.3.1'
+def support_version = '26.0.1'
 def rxjava_version = '2.0.9'
 def rxandroid_version = '2.0.1'
 def rxbinding_version = '2.0.0'
@@ -35,7 +37,6 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
 
     // Android
@@ -56,4 +57,33 @@ dependencies {
     // Butter Knife
     compile "com.jakewharton:butterknife:$butterknife_version"
     apt "com.jakewharton:butterknife-compiler:$butterknife_version"
+}
+
+ext {
+    bintrayRepo = 'develoop'
+    bintrayName = 'android-clean-architecture'
+
+    publishedGroupId = 'co.develoop.androidcleanarchitecture'
+    libraryName = 'AndroidCleanArchitecture'
+    artifact = 'android-clean-architecture'
+
+    libraryDescription = 'Android library to create a project using a Clean Architecture'
+
+    siteUrl = 'https://github.com/asantalla/AndroidCleanArchitecture'
+    gitUrl = 'https://github.com/asantalla/AndroidCleanArchitecture.git'
+
+    libraryVersion = version_name
+
+    developerId = 'asantalla'
+    developerName = 'Adrián Santalla'
+    developerEmail = 'adrian.santalla@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+if (project.rootProject.file('local.properties').exists()) {
+    apply from: 'install.gradle'
+    apply from: 'bintray.gradle'
 }
